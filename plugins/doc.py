@@ -6,10 +6,12 @@ class Plugin:
 
 	def __init__(self, args):
 		self.args = args
+		self.analyzed_mimes = ['application/msword',
+								'vnd.ms-office']
 
 	def analyze(self, afile):
 		
-		if afile.mime_type == 'application/msword':
+		if afile.mime_type in self.analyzed_mimes:
 			parser = olevba.VBA_Parser(afile.path)
 			results = parser.analyze_macros()
 
