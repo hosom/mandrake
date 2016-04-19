@@ -15,8 +15,11 @@ class Plugin:
 			parser = olevba.VBA_Parser(afile.path)
 			results = parser.analyze_macros()
 
-			for kw_type, keyword, description in results:
-				output = 'type: %s keyword: %s description: %s\n' % (kw_type, keyword, description)
+			if results is not None:
+				for kw_type, keyword, description in results:
+					output = 'type: %s keyword: %s description: %s\n' % (kw_type, keyword, description)
+			else:
+				output = None
 
 			afile.plugin_output[self.__NAME__] = output
 
