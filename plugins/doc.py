@@ -7,7 +7,7 @@ class Plugin:
 	def __init__(self, args):
 		self.args = args
 		self.analyzed_mimes = ['application/msword',
-								'vnd.ms-office']
+								'application/vnd.ms-office']
 
 	def analyze(self, afile):
 		
