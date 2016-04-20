@@ -7,6 +7,7 @@ class Plugin:
 	def __init__(self, args):
 		self.args = args
 		self.analyzed_mimes = ['application/msword',
+								'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 								'application/vnd.ms-office']
 		self.alert_on_macro = True
 		self.suspicious_on_macro = True
