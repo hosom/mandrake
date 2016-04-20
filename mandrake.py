@@ -19,6 +19,7 @@ class FileAnalysis:
 		self.plugin_output = {}
 		self.suspicious = False
 		self.alert = False
+		self.errors = []
 
 def parse_config(config_path):
 	'''Parse a configuration file and return a dictionary of the sections.
@@ -125,6 +126,8 @@ def analyze(analyzers, file_object):
 				## error feedback so that plugin authors can troubleshoot
 				## their code
 				print('An error occurred during plugin execution in plugin %s.' % analyzer.__NAME__)
+				file_object.errors = ['An error occurred during plugin execution in plugin %s.' % analyzer.__NAME__]
+				file.alert = True
 
 	return file_object
 
