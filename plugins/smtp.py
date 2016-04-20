@@ -25,7 +25,7 @@ class Plugin:
 			self.mailfrom = args.get('mailfrom')
 		self.rcptto = args.get('rcptto')
 		if self.rcptto is None:
-			sys.exit('smtp plugin loaded, but no recipients found in config')
+			sys.exit('smtp plugin loaded, but no rcptto found in config')
 
 	def analyze(self, afile):
 
