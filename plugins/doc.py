@@ -9,6 +9,7 @@ class Plugin:
 		self.analyzed_mimes = ['application/msword',
 								'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 								'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+								'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 								'application/vnd.ms-excel',
 								'application/vnd.ms-powerpoint',
 								'application/vnd.openxmlformats-officedocument.presentationml.presentation',
@@ -19,7 +20,11 @@ class Plugin:
 	def analyze(self, afile):
 		
 		if afile.mime_type in self.analyzed_mimes:
-			parser = olevba.VBA_Parser(afile.path)
+			try:
+				parser = olevba.VBA_Parser(afile.path)
+			except TypeError:
+				output = 'Error: Unsupported filetype.'
+				return
 			results = parser.analyze_macros()
 
 			contains_macro = parser.detect_vba_macros()
