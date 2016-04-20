@@ -23,8 +23,12 @@ class Plugin:
 			try:
 				parser = olevba.VBA_Parser(afile.path)
 			except TypeError:
-				output = 'Error: Unsupported filetype.'
+				afile.errors = afile.errors + ['doc plugin: unsupported filetype']
+				#afile.errors = afile.errors + ['TypeError']
+				output = 'None'
+				afile.plugin_output[self.__NAME__] = output
 				return
+
 			results = parser.analyze_macros()
 
 			contains_macro = parser.detect_vba_macros()
@@ -41,7 +45,8 @@ class Plugin:
 			else:
 				output = 'None'
 
-			afile.vba = parser.reveal()
+			if contains_macro:
+				afile.vba = parser.reveal()
 
 			afile.plugin_output[self.__NAME__] = output
 
