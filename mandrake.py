@@ -17,6 +17,7 @@ class FileAnalysis:
 		'''
 		self.path = path
 		self.plugin_output = {}
+		self.suspicious = False
 		self.alert = False
 
 def parse_config(config_path):

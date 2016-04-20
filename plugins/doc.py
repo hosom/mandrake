@@ -8,6 +8,8 @@ class Plugin:
 		self.args = args
 		self.analyzed_mimes = ['application/msword',
 								'application/vnd.ms-office']
+		self.alert_on_macro = True
+		self.suspicious_on_macro = True
 
 	def analyze(self, afile):
 		
@@ -15,11 +17,21 @@ class Plugin:
 			parser = olevba.VBA_Parser(afile.path)
 			results = parser.analyze_macros()
 
+			contains_macro = parser.detect_vba_macros()
+			if contains_macro and self.alert_on_macro:
+				afile.alert = True
+			if contains_macro and self.suspicious_on_macro:
+				afile.suspicious = True
+
+			output = '' 
+
 			if results is not None:
-				for kw_type, keyword, description in results:
-					output = 'type: %s keyword: %s description: %s\n' % (kw_type, keyword, description)
+				for result in results:
+					output = output + '[%s] keyword: %s description: %s' % result
 			else:
-				output = None
+				output = 'None'
+
+			afile.vba = parser.reveal()
 
 			afile.plugin_output[self.__NAME__] = output
 
