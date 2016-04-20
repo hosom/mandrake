@@ -8,6 +8,10 @@ class Plugin:
 		self.args = args
 		self.analyzed_mimes = ['application/msword',
 								'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+								'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
+								'application/vnd.ms-excel',
+								'application/vnd.ms-powerpoint',
+								'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 								'application/vnd.ms-office']
 		self.alert_on_macro = True
 		self.suspicious_on_macro = True
