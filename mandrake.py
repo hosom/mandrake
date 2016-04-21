@@ -50,7 +50,7 @@ def order_plugins(config):
 		list: An ordered list of plugins
 	'''
 
-	plugins = [[], [], [], [], [], [], [], [], [], []]
+	plugins = [[]] * 128
 	for section in config:
 		# Determine if a plugin has been enabled
 		enabled = config[section].get('enabled')
@@ -75,7 +75,7 @@ def order_plugins(config):
 		if priority is not None:
 			priority = int(priority)
 		else:
-			priority = 8
+			priority = 64
 
 		plugins[priority] = plugins[priority] + [(section, args)]
 
