@@ -30,6 +30,9 @@ class Plugin:
 		'''
 		if afile.mime_type in self.analyzed_mimes:
 
+			# Parse the metadata for the ole file and add all ole metadata
+			# attributes to the FileAnalysis object. This should add a ton
+			# of contectual information to the file.
 			try:
 				ole = olefile.OleFileIO(afile.path)
 			except IOError:
@@ -39,6 +42,8 @@ class Plugin:
 
 			meta = ole.get_metadata()
 
+			# These loops iterate through the meta for attributes and then 
+			# set attributes with the same name in the FileAnalysis object
 			for prop in meta.SUMMARY_ATTRIBS:
 				value = getattr(meta, prop)
 				setattr(afile, prop, value)
@@ -47,6 +52,10 @@ class Plugin:
 				value = getattr(meta, prop)
 				setattr(afile, prop, value)
 
+			# Explicitly call close to ensure that the ole object gets closed
+			ole.close()
+
+			# Parse the file again, this time looking for VBA scripts.
 			try:
 				parser = olevba.VBA_Parser(afile.path)
 			except TypeError:
