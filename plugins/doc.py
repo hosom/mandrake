@@ -8,12 +8,8 @@ class Plugin:
 	def __init__(self, args):
 		self.args = args
 		self.analyzed_mimes = ['application/msword',
-								'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
-								'application/vnd.openxmlformats-officedocument.wordprocessingml.template',
-								'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 								'application/vnd.ms-excel',
 								'application/vnd.ms-powerpoint',
-								'application/vnd.openxmlformats-officedocument.presentationml.presentation',
 								'application/vnd.ms-office']
 		self.alert_on_macro = True
 		self.suspicious_on_macro = True
@@ -40,6 +36,15 @@ class Plugin:
 				afile.errors = afile.errors + ['doc plugin: unsupported filetype']
 				output = 'None'
 				afile.plugin_output[self.__NAME__] = output
+				process_metadata = False
+			# There are OLE files out there with LOTS of embedded objects.
+			# This should prevent plugin crashes for those cases.
+			except RuntimeError:
+				afile.errors = afile.errors + ['doc plugin: max recursion reached']
+				output = 'None'
+				process_metadata = False
+				afile.suspicious = True
+				process_metadata = False
 
 			if process_metadata:
 				meta = ole.get_metadata()
