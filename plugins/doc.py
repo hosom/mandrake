@@ -35,22 +35,23 @@ class Plugin:
 			# of contectual information to the file.
 			try:
 				ole = olefile.OleFileIO(afile.path)
+				process_metadata = True
 			except IOError:
 				afile.errors = afile.errors + ['doc plugin: unsupported filetype']
 				output = 'None'
 				afile.plugin_output[self.__NAME__] = output
 
-			meta = ole.get_metadata()
+			if process_metadata:
+				meta = ole.get_metadata()
+				# These loops iterate through the meta for attributes and then 
+				# set attributes with the same name in the FileAnalysis object
+				for prop in meta.SUMMARY_ATTRIBS:
+					value = getattr(meta, prop)
+					setattr(afile, prop, value)
 
-			# These loops iterate through the meta for attributes and then 
-			# set attributes with the same name in the FileAnalysis object
-			for prop in meta.SUMMARY_ATTRIBS:
-				value = getattr(meta, prop)
-				setattr(afile, prop, value)
-
-			for prop in meta.DOCSUM_ATTRIBS:
-				value = getattr(meta, prop)
-				setattr(afile, prop, value)
+				for prop in meta.DOCSUM_ATTRIBS:
+					value = getattr(meta, prop)
+					setattr(afile, prop, value)
 
 			# Explicitly call close to ensure that the ole object gets closed
 			ole.close()
