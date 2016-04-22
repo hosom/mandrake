@@ -53,8 +53,8 @@ class Plugin:
 					value = getattr(meta, prop)
 					setattr(afile, prop, value)
 
-			# Explicitly call close to ensure that the ole object gets closed
-			ole.close()
+				# Explicitly call close to ensure that the ole object gets closed
+				ole.close()
 
 			# Parse the file again, this time looking for VBA scripts.
 			try:
