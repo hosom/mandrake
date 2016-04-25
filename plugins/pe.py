@@ -12,6 +12,16 @@ class Plugin:
 		self.args = args
 
 	def analyze(self, afile):
+		'''Analyze the Windows portable executable format.
+
+		ref: https://en.wikipedia.org/wiki/Portable_Executable
+
+		Args: 
+			afile (FileAnalysis): Mandrake file analysis object.
+
+		Returns:
+			None
+		'''
 
 		if afile.mime_type == 'application/x-dosexec':
 			try:
@@ -22,14 +32,34 @@ class Plugin:
 				afile.plugin_output[self.__NAME__] = output
 				return
 
-			is_dll = pe.is_dll()
-			afile.is_dll = is_dll
+			# Determine whether the pe file is likely to be packed
+			afile.is_probably_packed = peutils.is_probably_packed(pe)
 
+			# Attach pe parser warnings
+			afile.warnings = pe.get_warnings()
+
+			# This method determines whether or not the binary is a dll
+			afile.is_dll = pe.is_dll()
+
+			afile.is_exe = pe.is_exe()
+
+			afile.is_driver = pe.is_driver()
+
+			# Does the checksum check out?
+			afile.verify_checksum = pe.verify_checksum()
+
+			# Determine the compile date of a binary
 			compile_date = datetime.fromtimestamp(pe.FILE_HEADER.TimeDateStamp)
 			afile.compile_date = compile_date
 
+			# Compute / retrieve the imphash
+
+			afile.imphash = pe.get_imphash()
+
+			# Parse out the import table from within the pe file
 			imports = {}
 			if hasattr(pe, 'DIRECTORY_ENTRY_IMPORT'):
+				afile.has_import_table = True
 				for entry in pe.DIRECTORY_ENTRY_IMPORT:
 					imports[entry.dll] = []
 					for imp in entry.imports:
@@ -37,8 +67,10 @@ class Plugin:
 
 				afile.imports = imports
 
+			# Parse out the export table listed within the pe file
 			exports = []
 			if hasattr(pe, 'DIRECTORY_ENTRY_EXPORT'):
+				afile.has_export_table = True
 				for entry in pe.DIRECTORY_ENTRY_EXPORT.symbols:
 					exports.append(entry.name)
 
