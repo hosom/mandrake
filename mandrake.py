@@ -125,9 +125,7 @@ def analyze(analyzers, file_object):
 				## TODO: This neeeds to be expanded to provide better
 				## error feedback so that plugin authors can troubleshoot
 				## their code
-				print('An error occurred during plugin execution in plugin %s.' % analyzer.__NAME__)
 				file_object.errors = ['An error occurred during plugin execution in plugin %s.' % analyzer.__NAME__]
-				file_object.alert = True
 
 	return file_object
 
