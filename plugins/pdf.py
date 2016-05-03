@@ -1,6 +1,5 @@
-from pdfminer.pdfparser import PDFParser
-from pdfminer.pdfdocument import PDFDocument
-
+import re
+from pdfid import PDFiD2String, PDFiD
 class Plugin:
 
 	__NAME__ = 'pdf'
@@ -36,13 +35,22 @@ class Plugin:
 				process_metadata = False
 
 			if process_metadata:
-				parser = PDFParser(fp)
-				doc = PDFDocument(parser)
-				#Get metadata from document parser
-				meta = doc.info
+				# Get string representation of discovered PDF tags
+				result = PDFiD2String(PDFiD(afile.path),True)
+				# Split off of new lines
+				lines = result.split('\n')[1:]
+				for line in lines:
+					#strip white spaces
+					line = line.strip()
+					#parse out line into key,value by sequential white spaces
+					kv_pair = re.split('\s+',line)
+					if len(kv_pair) > 1:
+						#remove forward slash
+						key = re.sub('/','',kv_pair[0])
+						value = kv_pair[1]
+						# if we have more than 2 entries then the value was parsed incorrectly, join the other entries in list into one value
+						if len(kv_pair) > 2:
+							value = ' '.join(kv_pair[1:])
+						# set the attribute with our key,value
+						setattr(afile,key,value)
 
-				for i in meta:
-					for k,v in i.iteritems():
-						setattr(afile,k,v)	
-			
-				parser.close()
