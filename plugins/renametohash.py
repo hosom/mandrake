@@ -2,6 +2,8 @@ import os
 
 class Plugin:
 
+	__NAME__ = 'renametohash'
+
 	def __init__(self, args):
 		self.args = args
 
