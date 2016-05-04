@@ -143,6 +143,9 @@ def main():
 	
 	try:
 		for event in i.event_gen():
+			## TODO: Need to determine which filesystem events would not cause
+			## analysis to trigger. For example, moving a file into the 
+			## monitored directory does not currently work.
 			if event is not None and event[1] == ['IN_CLOSE_WRITE']:
 				fpath = '%s/%s' % (event[2], event[3])
 				f = FileAnalysis(fpath)
