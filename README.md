@@ -26,9 +26,9 @@ class Plugin:
     Returns:
       None
     '''
-    self.chunk_size = args.get('chunk_size')
-		if self.chunk_size == None:
-			self.chunk_size = 4096
+	self.chunk_size = args.get('chunk_size')
+	if self.chunk_size == None:
+		self.chunk_size = 4096
 	
 	def analyze(self, afile):
 	  '''Every plugin must also implement analyze, which must accept two arguments.
@@ -54,7 +54,7 @@ Now all that is left is to register your plugin. Open up your **mandrake.conf** 
 [md5]
 enabled = true
 priority = 1
-args = "{'chunk_size' : 2048}"
+chunk_size = 2048
 ```
 
 This will register your plugin for use within Mandrake.

@@ -64,12 +64,7 @@ def order_plugins(config):
 		if not enabled:
 			next
 
-		# Collect plugin arguments from the configuration file
-		args = config[section].get('args')
-		if args is not None:
-			args = json.loads(args)
-		else:
-			args = {}
+		args = config[section]
 
 		priority = config[section].get('priority')
 		if priority is not None:
