@@ -12,7 +12,7 @@ class Plugin:
 		# Print JSON objects?
 		try:
 			self.json = strtobool(args.get('json'))
-		except ValueError, AttributeError:
+		except (ValueError, AttributeError) as e:
 			self.json = False
 
 	def analyze(self, afile):

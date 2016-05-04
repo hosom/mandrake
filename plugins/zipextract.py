@@ -10,13 +10,13 @@ class Plugin:
 
 		try:
 			self.max_extracted_files = int(args.get('max_extracted_files'))
-		except TypeError, ValueError:
+		except (TypeError, ValueError) as e:
 			# Default max extracted files is 30
 			self.max_extracted_files = 30
 
 		try:
 			self.max_extracted_size = int(args.get('max_extracted_size'))
-		except TypeError, ValueError:
+		except (TypeError, ValueError) as e:
 			# Default max extracted size is 50 MB
 			self.max_extracted_size = 50000000
 		

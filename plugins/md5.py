@@ -8,7 +8,7 @@ class Plugin:
 
 		try:
 			self.chunk_size = int(args.get('chunk_size'))
-		except TypeError, ValueError:
+		except (TypeError, ValueError) as e:
 			self.chunk_size = 4096
 
 	def analyze(self, afile):
