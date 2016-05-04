@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 import sys, os.path, re
 from pdfminer.psparser import PSKeyword, PSLiteral, LIT
 from pdfminer.pdfparser import PDFParser
@@ -281,5 +282,4 @@ class Plugin:
                 pdf_xml = DumpPDF()
                 pdf_xml.dumppdf()
 
-                
 
