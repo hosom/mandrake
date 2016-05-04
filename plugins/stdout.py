@@ -28,7 +28,10 @@ class Plugin:
 		'''
 
 		if self.json:
-			print(json.dumps(afile.__dict__))
+			attrs = afile.__dict__
+			for attr in attrs:
+				attrs[attr] = str(attrs[attr])
+			print(json.dumps(attrs))
 		else:
 			attrs = vars(afile)
 			print('----------------------------------------------')
