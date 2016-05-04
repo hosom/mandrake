@@ -261,6 +261,7 @@ def main(argv):
     PDFParser.debug = debug
     #
     for fname in args:
+        print(fname)
         proc(outfp, fname, objids, pagenos, password=password,
              dumpall=dumpall, codec=codec, extractdir=extractdir)
     return
