@@ -26,6 +26,7 @@ class Plugin:
 		Returns:
 			None
 		'''
+
 		if self.json:
 			print(json.dumps(afile.__dict__))
 		else:

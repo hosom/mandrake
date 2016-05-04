@@ -22,7 +22,6 @@ class Plugin:
 		Returns:
 			None
 		'''
-
 		if afile.mime_type == 'application/x-dosexec':
 			try:
 				pe = pefile.PE(afile.path)
@@ -63,7 +62,7 @@ class Plugin:
 
 			# Determine the compile date of a binary
 			compile_date = datetime.fromtimestamp(pe.FILE_HEADER.TimeDateStamp)
-			afile.compile_date = compile_date
+			afile.compile_date = compile_date.isoformat()
 
 			# Compute / retrieve the imphash
 			afile.imphash = pe.get_imphash()
