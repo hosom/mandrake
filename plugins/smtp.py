@@ -1,6 +1,7 @@
 import smtplib
 import sys
 
+from distutils.util import strtobool
 from email.mime.text import MIMEText
 
 class Plugin:
@@ -9,18 +10,22 @@ class Plugin:
 
 	def __init__(self, args):
 		
-		self.email_on_alert = args.get('email_on_alert')
-		self.email_on_suspicious = args.get('email_on_suspicious')
-		
-		if self.email_on_alert is None:
-			self.email_on_alert = True
-		if self.email_on_suspicious is None:
-			self.email_on_suspicious = True
+		# Determine whether or not to email on errors, alerts, 
+		# or suspicious files
+		try:
+			self.email_on_alert = strtobool(args.get('email_on_alert'))
+		except ValueError, AttributeError:
+			self.email_on_alert = False
+		try: 
+			self.email_on_suspicious = strtobool(args.get('email_on_suspicious'))
+		except ValueError, AttributeError:
+			self.email_on_suspicious = False
+		try:
+			self.email_on_errors = strtobool(args.get('email_on_errors'))
+		except ValueError, AttributeError:
+			self.email_on_errors = False
 
-		self.email_on_errors = args.get('email_on_errors')
-		if self.email_on_errors is None:
-			self.email_on_errors = True
-
+		# Mail configuration
 		self.mailserver = args.get('mailserver')
 		if self.mailserver is None:
 			sys.exit('smtp plugin loaded, but no mailserver found in config')
@@ -32,7 +37,14 @@ class Plugin:
 			sys.exit('smtp plugin loaded, but no rcptto found in config')
 
 	def analyze(self, afile):
+		'''Send emails related to files based on the flags that have been set.
 
+		Args:
+			afile (FileAnalysis): The file being analyzed.
+
+		Returns:
+			None
+		'''
 		send_email = False
 		subject = 'Mandrake file detection'
 		if self.email_on_alert and afile.alert:
