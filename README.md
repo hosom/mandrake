@@ -26,9 +26,13 @@ class Plugin:
     Returns:
       None
     '''
-	self.chunk_size = args.get('chunk_size')
-	if self.chunk_size == None:
-		self.chunk_size = 4096
+
+    # Since all of the fields in args are passed as strings, plugins must
+    # handle type checking. 
+    try:
+      self.chunk_size = int(args.get('chunk_size'))
+    except TypeError, ValueError:
+      self.chunk_size = 4096
 	
 	def analyze(self, afile):
 	  '''Every plugin must also implement analyze, which must accept two arguments.
