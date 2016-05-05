@@ -62,7 +62,7 @@ class Plugin:
 
 			# Determine the compile date of a binary
 			compile_date = datetime.fromtimestamp(pe.FILE_HEADER.TimeDateStamp)
-			afile.compile_date = compile_date.isoformat()
+			afile.compile_date = compile_date
 
 			# Compute / retrieve the imphash
 			afile.imphash = pe.get_imphash()

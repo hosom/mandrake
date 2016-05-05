@@ -10,7 +10,7 @@ class Plugin:
 		# Pull the configured hash
 		self.hash = self.args.get('hash')
 		# If the configured hash is unsupported or unconfigured, use sha1
-		if self.hash is not in ['sha1', 'sha256', 'md5']:
+		if self.hash not in ['sha1', 'sha256', 'md5']:
 			self.hash = 'sha1'
 
 	def analyze(self, afile):
