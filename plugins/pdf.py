@@ -149,8 +149,6 @@ class Plugin:
 
         if afile.mime_type in self.analyzed_mimes:
 
-            # Parse the metadata for the pdf file and add all pdf metadata
-            # attributes to the FileAnalysis object.
             try:
                 fp = open(afile.path)
                 output = 'None'
@@ -162,26 +160,42 @@ class Plugin:
                 afile.plugin_output[self.__NAME__] = output
                 process_metadata = False
 
+            # Parse the metadata for the pdf file and add all pdf metadata
+            # attributes to the FileAnalysis object.
             if process_metadata:
 
-                pdf_tags = ['JavaScript','OpenAction']
-
-                # count out PDF tags
+                # count out PDF tags using pdfid and set attributes
                 pdf_id(afile)
 
-                parser = PDFParser(fp)
-                doc = PDFDocument(parser,'')
-                xml_io = StringIO.StringIO()
-                xml_str = dumpallobjs(xml_io,doc,None)
-                xml_io.close()
+                #get metadata information and update analysis object
+                try:
+                    parser = PDFParser(fp)
+                    doc = PDFDocument(parser,'')
+                    if doc.info:
+                        info = doc.info[0]
+                        for k,v in info.iteritems():
+                            setattr(afile,k,v)
 
-                xml = ET.fromstring(xml_str)
 
-                strings = list()
-                for child in xml.iter('string'):
+                    #Get XML representation of PDF document
+                    xml_io = StringIO.StringIO()
+                    xml_str = dumpallobjs(xml_io,doc,None)
+                    xml_io.close()
+
+                except:
+                    afile.errors = afile.errors + ['pdf plugin: pdfminer failed to parse PDF document']
+
+
+                #Go through XML and grab all string tags. This will contain embedded links, javascript, titles useful to enrich meaning behind pdfid findings
+                try:
+                    xml = ET.fromstring(xml_str)
+                    strings = list()
+                    for child in xml.iter('string'):
                         if child.text not in strings:
                             strings.append(child.text)
-
-                setattr(afile,'strings',strings)
+                    setattr(afile,'strings',strings)
+                except ET.ParseError:
+                    afile.errors = afile.errors + ['pdf plugin: Couldn\'t parse XML representation of PDF; Unsupported character(s) discovered']
+                
 
 
