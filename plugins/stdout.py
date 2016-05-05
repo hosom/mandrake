@@ -30,7 +30,7 @@ class Plugin:
 		if self.json:
 			attrs = afile.__dict__
 			for attr in attrs:
-				attrs[attr] = str(attrs[attr])
+				attrs[attr] = str(attrs[attr]).encode('utf-8', errors='replace')
 			print(json.dumps(attrs))
 		else:
 			attrs = vars(afile)
