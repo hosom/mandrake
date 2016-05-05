@@ -1,6 +1,7 @@
 import sys, os.path, re
 import StringIO
 import xml.etree.ElementTree as ET
+from lxml import etree
 from pdfminer.psparser import PSKeyword, PSLiteral
 from pdfminer.pdfparser import PDFParser
 from pdfminer.pdfdocument import PDFDocument
@@ -188,14 +189,14 @@ class Plugin:
 
                 #Go through XML and grab all string tags. This will contain embedded links, javascript, titles useful to enrich meaning behind pdfid findings
                 try:
-                    xml = ET.fromstring(xml_str)
+                    parser = etree.XMLParser(recover=True)
+                    xml = etree.fromstring(xml_str,parser=parser)
                     strings = list()
                     for child in xml.iter('string'):
                         if child.text not in strings:
-                            strings.append(child.text)
+                            text = re.sub(r'\n|\r|\\r|\\n','',child.text)
+                            strings.append(text)
                     setattr(afile,'strings',strings)
-                except ET.ParseError:
-                    afile.errors = afile.errors + ['pdf plugin: Couldn\'t parse XML representation of PDF; Unsupported character(s) discovered']
-                
-
+                except ET.ParseError as e:
+                    afile.errors = afile.errors + ['pdf plugin: %s' % str(e)]
 
