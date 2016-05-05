@@ -33,7 +33,14 @@ class Plugin:
             None
         '''
 
-        #Adapted from pdfminer utility dumppdf.py
+
+        '''The following functions adapted and modified from pdfminer utility dumppdf.py, they are responsible for building XML structure from PDF objects
+
+            e
+            dumpxml
+            dumptrailers
+            dumpallobjs
+        '''
         ESC_PAT = re.compile(r'[\000-\037&<>()"\042\047\134\177-\377]')
         def e(s):
             return ESC_PAT.sub(lambda m:'&#%d;' % ord(m.group(0)), s)
@@ -166,7 +173,10 @@ class Plugin:
             if process_metadata:
 
                 # count out PDF tags using pdfid and set attributes
-                pdf_id(afile)
+                try:
+                    pdf_id(afile)
+                except:
+                    aile.errors = afile.errors + ['pdf plugin: pdfid failed to parse PDF document']
 
                 #get metadata information and update analysis object
                 try:
@@ -189,6 +199,7 @@ class Plugin:
 
                 #Go through XML and grab all string tags. This will contain embedded links, javascript, titles useful to enrich meaning behind pdfid findings
                 try:
+                    #pass recover=True so element tree can parse unfriendly xml characters from PDF extract
                     parser = etree.XMLParser(recover=True)
                     xml = etree.fromstring(xml_str,parser=parser)
                     strings = list()
