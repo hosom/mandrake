@@ -1,12 +1,11 @@
 import sys, os.path, re
 import StringIO
 import xml.etree.ElementTree as ET
-from pdfminer.psparser import PSKeyword, PSLiteral, LIT
+from pdfminer.psparser import PSKeyword, PSLiteral
 from pdfminer.pdfparser import PDFParser
-from pdfminer.pdfdocument import PDFDocument, PDFNoOutlines
-from pdfminer.pdftypes import PDFObjectNotFound, PDFValueError
-from pdfminer.pdftypes import PDFStream, PDFObjRef, resolve1, stream_value
-from pdfminer.pdfpage import PDFPage
+from pdfminer.pdfdocument import PDFDocument
+from pdfminer.pdftypes import PDFObjectNotFound
+from pdfminer.pdftypes import PDFStream, PDFObjRef
 from pdfminer.utils import isnumber
 from pdfid import PDFiD2String, PDFiD #Source code for pdfid put in public domain by Didier Stevens, no Copyright
 
@@ -128,7 +127,7 @@ class Plugin:
             out.write('</pdf>')
             return out.getvalue()
 
-
+        #leverages pdfid to print out a counted summary of discovered tags in PDF file
         def pdf_id(afile):
             result = PDFiD2String(PDFiD(afile.path),True)
             # Split off of new lines
