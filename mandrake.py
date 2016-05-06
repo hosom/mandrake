@@ -1,7 +1,5 @@
 import inotify.adapters as inotify
 
-import json
-
 from argparse import ArgumentParser
 from ConfigParser import ConfigParser
 
