@@ -77,6 +77,15 @@ def order_plugins(config):
 	return plugins
 
 def load_plugin(plugin):
+	'''This is the equivalent of from plugins.{PluginName} import Plugin.
+
+
+	Args:
+		plugin (str): The name of the plugin being imported.
+
+	Returns:
+		class: Plugin class to be initialized.
+	'''
 	return __import__('plugins.%s' % (plugin), 
 			globals(), 
 			locals(), 
