@@ -1,6 +1,5 @@
 
 from inotify import INotify, flags
-#import inotify.adapters as inotify
 
 from argparse import ArgumentParser
 try:
@@ -160,21 +159,6 @@ def main():
 			analyze(modules, f)
 	finally:
 		inotify.close()
-
-	#i = inotify.Inotify()
-	#i.add_watch(args.directory)
-	
-	#try:
-	#	for event in i.event_gen():
-			## TODO: Need to determine which filesystem events would not cause
-			## analysis to trigger. For example, moving a file into the 
-			## monitored directory does not currently work.
-	#		if event is not None and event[1] == ['IN_CLOSE_WRITE']:
-	#			fpath = '%s/%s' % (event[2], event[3])
-	#			f = FileAnalysis(fpath)
-	#			analyze(modules, f)
-	#finally:
-	#	i.remove_watch(args.directory)
 
 if __name__ == '__main__':
 	main()
