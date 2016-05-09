@@ -62,6 +62,7 @@ class Plugin:
 				# are removed. This is a temporary work-around... the doc 
 				# analyzer will be rewritten to accomidate things like this
 				if hasattr(afile, 'thumbnail'):
+					afile.has_thumbnail = True
 					del afile.thumbnail
 
 				# Explicitly call close to ensure that the ole object gets closed
