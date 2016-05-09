@@ -1,10 +1,4 @@
-from __future__ import print_function
 import json
-
-import sys
-import codecs
-sys.stdout = codecs.getwriter('utf8')(sys.stdout)
-sys.stderr = codecs.getwriter('utf8')(sys.stderr)
 
 from distutils.util import strtobool
 from datetime import datetime
@@ -45,10 +39,8 @@ class Plugin:
 		if self.json:
 			attrs = afile.__dict__
 			for attr in attrs:
-				#attrs[attr] = str(attrs[attr]).encode('utf-8', errors='replace')
-				#attrs[attr] = unicode(attrs[attr], errors='replace')
 				attrs[attr] = to_unicode_or_bust(attrs[attr])
-				#attrs[attr] = bytes(attrs[attr])
+
 			print(json.dumps(attrs))
 		else:
 			attrs = vars(afile)

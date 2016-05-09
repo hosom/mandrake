@@ -1,12 +1,5 @@
-from __future__ import print_function
 from inotify import INotify, flags
-
 from argparse import ArgumentParser
-
-import sys
-import codecs
-sys.stdout = codecs.getwriter('utf8')(sys.stdout)
-sys.stderr = codecs.getwriter('utf8')(sys.stderr)
 
 try:
 	from ConfigParser import ConfigParser
@@ -137,7 +130,6 @@ def analyze(analyzers, file_object):
 				## error feedback so that plugin authors can troubleshoot
 				## their code
 				errmsg = '%s: %s on file %s' % (analyzer.__NAME__, err, file_object.path)
-				#errmsg.encode('ascii', errors='replace')
 				print(errmsg)
 				file_object.errors = ['An error occurred during plugin execution in plugin %s.' % analyzer.__NAME__]
 

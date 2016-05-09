@@ -58,6 +58,12 @@ class Plugin:
 					value = getattr(meta, prop)
 					setattr(afile, prop, value)
 
+				# Thumbnails are binary streams and muck up the output so they
+				# are removed. This is a temporary work-around... the doc 
+				# analyzer will be rewritten to accomidate things like this
+				if hasattr(afile, 'thumbnail'):
+					del afile.thumbnail
+
 				# Explicitly call close to ensure that the ole object gets closed
 				ole.close()
 
