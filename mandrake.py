@@ -1,13 +1,13 @@
-
+from __future__ import print_function
 from inotify import INotify, flags
 
 from argparse import ArgumentParser
 
 import sys
 import codecs
+sys.stdout = codecs.getwriter('utf8')(sys.stdout)
+sys.stderr = codecs.getwriter('utf8')(sys.stderr)
 
-sys.stdout = codecs.getwriter('utf-8')(sys.stdout)
-sys.stderr = codecs.getwriter('utf-8')(sys.stderr)
 try:
 	from ConfigParser import ConfigParser
 except ImportError:

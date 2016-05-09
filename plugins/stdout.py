@@ -1,6 +1,22 @@
+from __future__ import print_function
 import json
 
+import sys
+import codecs
+sys.stdout = codecs.getwriter('utf8')(sys.stdout)
+sys.stderr = codecs.getwriter('utf8')(sys.stderr)
+
 from distutils.util import strtobool
+from datetime import datetime
+
+def to_unicode_or_bust(
+        obj, encoding='utf-8'):
+    if isinstance(obj, basestring):
+        if not isinstance(obj, unicode):
+            obj = unicode(obj, encoding, errors='replace')
+    elif isinstance(obj, datetime):
+    	obj = str(obj)
+    return obj
 
 class Plugin:
 
@@ -26,11 +42,13 @@ class Plugin:
 		Returns:
 			None
 		'''
-
 		if self.json:
 			attrs = afile.__dict__
-			#or attr in attrs:
-			#	attrs[attr] = str(attrs[attr]).encode('utf-8', errors='replace')
+			for attr in attrs:
+				#attrs[attr] = str(attrs[attr]).encode('utf-8', errors='replace')
+				#attrs[attr] = unicode(attrs[attr], errors='replace')
+				attrs[attr] = to_unicode_or_bust(attrs[attr])
+				#attrs[attr] = bytes(attrs[attr])
 			print(json.dumps(attrs))
 		else:
 			attrs = vars(afile)
