@@ -1,4 +1,6 @@
 import requests
+requests.packages.urllib3.disable_warnings()
+
 _HOST = 'panacea.threatgrid.com'
 
 class Plugin:
@@ -25,8 +27,7 @@ class Plugin:
 		}
 
 	def analyze(self, afile):
-		afile.sandbox = True
-		if afile.sandbox == True:
+		if hasattr(afile, 'sandbox') and afile.sandbox:
 			fname = afile.path.split('/')[-1]
 			self.params['filename'] = fname
 			r = requests.post('https://%s/api/v2/samples' % (_HOST), 
