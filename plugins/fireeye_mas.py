@@ -65,14 +65,14 @@ class Plugin:
 					self.authenticate()
 					submit_success = self.submit(afile)
 					if submit_success == True:
-						afile.fireeeye_status = 'Success'
+						afile.fireeye_status = 'Success'
 					else:
-						afile.fireeeye_status = 'Fail'
+						afile.fireeye_status = 'Fail'
 			else:
 				self.authenticate()
 				submit_success = self.submit(afile)
 				if submit_success == True:
-					afile.fireeeye_status = 'Success'
+					afile.fireeye_status = 'Success'
 				else:
-					afile.fireeeye_status = 'Fail'
+					afile.fireeye_status = 'Fail'
 		
