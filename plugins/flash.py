@@ -22,9 +22,8 @@ class Plugin:
                 '''
 		
 		if afile.mime_type in self.analyzed_mimes:
-			# Parse the metadata for the ole file and add all ole metadata
-                        # attributes to the FileAnalysis object. This should add a ton
-                        # of contectual information to the file.
+			# Parse the metadata for the swf file and add all swf metadata
+                        # attributes to the FileAnalysis object.
 			try:
                         	fp = open(afile.path,'rb')
 				swf = SWF(fp)
@@ -49,13 +48,11 @@ class Plugin:
 							search = re.search(r'<dc:'+xt+'>(.*)</dc:'+xt+'>',tag.xmlString,re.M|re.I)
 							if search:
 								setattr(afile,xt,search.group(1))
+							if xt == 'title' and search.group(1):
+								afile.plugin_output[self.__NAME__] = search.group(1)
 					elif tag.name == 'TagScriptLimits':
 						setattr(afile,'MaxRecursionDepth',tag.maxRecursionDepth)
 						setattr(afile,'ScriptTimeout',tag.scriptTimeoutSeconds)
 					elif tag.name == 'TagExportAssets':
 						setattr(afile,'Exports',tag.exports)
-
-		
-									
-						
-                        afile.plugin_output[self.__NAME__] = 'None'
+ 
