@@ -19,6 +19,13 @@ class Plugin:
 		self.host = args.get('host')
 		self.user = args.get('user')
 		self.password = args.get('password')
+		self.http_proxy = args.get('http_proxy')
+		self.https_proxy = args.get('https_proxy')
+
+		self.proxies = {
+			'http' : self.http_proxy,
+			'https' : self.https_proxy
+		}
 
 		self.validate_tls = False
 
@@ -37,7 +44,8 @@ class Plugin:
 		'''
 		r = requests.post('https://%s/wsapis/v1.1.0/auth/login' % (self.host),
 				auth=(self.user, self.password),
-				verify=self.validate_tls)
+				verify=self.validate_tls,
+				proxies=self.proxies)
 
 		if r.status_code == 200:
 			self.xfeapitoken = r.headers['x-feapi-token']
@@ -47,7 +55,8 @@ class Plugin:
 				headers={'x-feapi-token' : self.xfeapitoken},
 				data=self._options,
 				files={afile.path: open(afile.path, 'rb')},
-				verify=self.validate_tls)
+				verify=self.validate_tls,
+				proxies=self.proxies)
 		if r.status_code == 200:
 			return True
 		else:

@@ -16,6 +16,13 @@ class Plugin:
 		self.vm = 'win7'
 
 		self.api_key = args.get('api_key')
+		self.http_proxy = args.get('http_proxy')
+		self.https_proxy = args.get('https_proxy')
+
+		self.proxies = {
+			'http' : self.http_proxy,
+			'https' : self.https_proxy
+		}
 
 		self.params = {
 			'tags' : self.tags,
@@ -32,7 +39,8 @@ class Plugin:
 			self.params['filename'] = fname
 			r = requests.post('https://%s/api/v2/samples' % (_HOST), 
 								data=self.params,
-								files={'sample':open(afile.path, 'rb')})
+								files={'sample':open(afile.path, 'rb')},
+								proxies=self.proxies)
 			if r.status_code == 200:
 				afile.threatgrid_status = 'Success'
 			else:
