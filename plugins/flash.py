@@ -48,7 +48,7 @@ class Plugin:
 							search = re.search(r'<dc:'+xt+'>(.*)</dc:'+xt+'>',tag.xmlString,re.M|re.I)
 							if search:
 								setattr(afile,xt,search.group(1))
-							if xt == 'title' and search.group(1):
+							if xt == 'title' and search:
 								afile.plugin_output[self.__NAME__] = search.group(1)
 					elif tag.name == 'TagScriptLimits':
 						setattr(afile,'MaxRecursionDepth',tag.maxRecursionDepth)
