@@ -1,6 +1,16 @@
 import json
 
 from distutils.util import strtobool
+from datetime import datetime
+
+def to_unicode_or_bust(
+        obj, encoding='utf-8'):
+    if isinstance(obj, basestring):
+        if not isinstance(obj, unicode):
+            obj = unicode(obj, encoding, errors='replace')
+    elif isinstance(obj, datetime):
+    	obj = str(obj)
+    return obj
 
 class Plugin:
 
@@ -26,11 +36,11 @@ class Plugin:
 		Returns:
 			None
 		'''
-
 		if self.json:
 			attrs = afile.__dict__
 			for attr in attrs:
-				attrs[attr] = str(attrs[attr]).encode('utf-8', errors='replace')
+				attrs[attr] = to_unicode_or_bust(attrs[attr])
+
 			print(json.dumps(attrs))
 		else:
 			attrs = vars(afile)

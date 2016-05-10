@@ -1,7 +1,10 @@
-import inotify.adapters as inotify
-
+from inotify import INotify, flags
 from argparse import ArgumentParser
-from ConfigParser import ConfigParser
+
+try:
+	from ConfigParser import ConfigParser
+except ImportError:
+	from configparser import ConfigParser
 
 class FileAnalysis:
 	'''Class representing a file and its analysis results.
@@ -87,7 +90,7 @@ def load_plugin(plugin):
 			globals(), 
 			locals(), 
 			['Plugin'], 
-			-1)
+			0)
 
 def init_plugins(plugins):
 	'''Accepts a list formatted by order_plugins and returns a list of open
@@ -126,7 +129,8 @@ def analyze(analyzers, file_object):
 				## TODO: This neeeds to be expanded to provide better
 				## error feedback so that plugin authors can troubleshoot
 				## their code
-				print('%s: %s on file %s' % (analyzer.__NAME__, err, file_object.path))
+				errmsg = '%s: %s on file %s' % (analyzer.__NAME__, err, file_object.path)
+				print(errmsg)
 				file_object.errors = ['An error occurred during plugin execution in plugin %s.' % analyzer.__NAME__]
 
 	return file_object
@@ -145,20 +149,16 @@ def main():
 
 	modules = init_plugins(ordered_plugins)
 
-	i = inotify.Inotify()
-	i.add_watch(args.directory)
-	
+	inotify = INotify()
+	watch_flags = flags.CLOSE_WRITE
+	wd = inotify.add_watch(args.directory, watch_flags)
+
 	try:
-		for event in i.event_gen():
-			## TODO: Need to determine which filesystem events would not cause
-			## analysis to trigger. For example, moving a file into the 
-			## monitored directory does not currently work.
-			if event is not None and event[1] == ['IN_CLOSE_WRITE']:
-				fpath = '%s/%s' % (event[2], event[3])
-				f = FileAnalysis(fpath)
-				analyze(modules, f)
+		for event in inotify.read_iter():
+			f = FileAnalysis('%s/%s' % (args.directory, event.name))
+			analyze(modules, f)
 	finally:
-		i.remove_watch(args.directory)
+		inotify.close()
 
 if __name__ == '__main__':
 	main()
