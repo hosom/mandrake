@@ -135,14 +135,7 @@ def analyze(analyzers, file_object):
 
 	return file_object
 
-def main():
-	p = ArgumentParser(description='Monitor a directory for new files.')
-	p.add_argument('directory', 
-		help='Directory to monitor.')
-	p.add_argument('-c', '--config',
-		default='mandrake.conf',
-		help='Configuration file path.')
-	args = p.parse_args()
+def main(args):
 
 	parsed_config = parse_config(args.config)
 	ordered_plugins = order_plugins(parsed_config)
@@ -161,4 +154,11 @@ def main():
 		inotify.close()
 
 if __name__ == '__main__':
-	main()
+	p = ArgumentParser(description='Analyze new files in a directory.')
+	p.add_argument('directory', 
+		help='Directory to monitor.')
+	p.add_argument('-c', '--config',
+		default='mandrake.conf',
+		help='Configuration file path.')
+	args = p.parse_args()
+	main(args)
